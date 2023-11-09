@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="signup-container">
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+
+        <label for="streetName">Street Name:</label>
+        <input type="text" id="streetName" name="streetName">
+
+        <label for="streetNumber">Street Number:</label>
+        <input type="text" id="streetNumber" name="streetNumber">
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city">
+
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country">
+
+        <label for="postalCode">Postal Code:</label>
+        <input type="text" id="postalCode" name="postalCode">
+
+        <button type="button" onclick="submitSignupForm()">Sign Up</button>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function submitSignupForm() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var firstName = $("#firstName").val();
+        var lastName = $("#lastName").val();
+        var streetName = $("#streetName").val();
+        var streetNumber = $("#streetNumber").val();
+        var city = $("#city").val();
+        var country = $("#country").val();
+        var postalCode = $("#postalCode").val();
+
+        // Perform validation if needed
+
+        // Create an object with user data
+        var userData = {
+            userName: username,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            streetName: streetName,
+            streetNumber: streetNumber,
+            city: city,
+            country: country,
+            postalCode: postalCode
+        };
+
+        // Make an AJAX request to your server to handle the signup
+        $.ajax({
+            url: "http://localhost:8080/proj/api/users", // Adjust the URL
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(userData),
+            success: function (response) {
+                // Handle the server response, e.g., show a success message or redirect
+                alert("Signup successful!");
+                window.location.href = "http://localhost:8080/proj/login"; // Redirect to the signin page
+            },
+            error: function (xhr, status, error) {
+                console.error("Signup failed. Status: " + status);
+                // Handle errors, e.g., show an error message
+                alert("Signup failed. Please try again.");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
