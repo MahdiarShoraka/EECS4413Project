@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<servlet>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>proj</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Jersey REST Service</servlet-name>
+		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Payment</servlet-name>
+		<jsp-file>/Payment.html</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Payment</servlet-name>
+		<url-pattern>/payment/submit</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>OrderDetails</servlet-name>
+		<jsp-file>/OrderDetails.html</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OrderDetails</servlet-name>
+		<url-pattern>/payment/order</url-pattern>
+	</servlet-mapping>
+	
+</web-app>

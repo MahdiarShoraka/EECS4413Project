@@ -1,18 +1,18 @@
-package com.mshoraka.studentapp;
+package proj;
 
 public class CreditCard {
 
 	private String cardHolderName;
-	private int cardNumber;
+	private long cardNumber;
 	private String expDate;
 	private int cvv;
 
 	// Account Number
-	public int getCardNumber() {
+	public long getCardNumber() {
 		return cardNumber;
 	}
 
-	public void setCardNumber(int accNumber) {
+	public void setCardNumber(long accNumber) {
 		this.cardNumber = accNumber;
 	}
 

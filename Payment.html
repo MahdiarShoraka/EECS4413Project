@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PaymentPage</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Payment Page</title>
+</head>
+
+<body>
+
+	<div class="container">
+		<table id="DetailsTable" border="1">
+			<tr>
+				<th>Bidder's Name</th>
+				<th>Bidder's Address</th>
+				<th>Total Paid Amount</th>
+			</tr>
+			<!-- Rows will be dynamically added here -->
+		</table>
+	</div>
+	<br><br>
+
+	<form id="paymentForm">
+		<label for="cn">Credit Card Number</label>
+		<input name="cardNumber" id="cn" type="number" />
+		<br><br>
+
+		<label for="chn">Card Holder Name</label>
+		<input name="cardHolderName" id="chn" type="text" />
+		<br><br>
+
+		<label for="exp">Expiration Date</label>
+		<input name="expDate" id="exp" type="text" />
+		<br><br>
+
+		<label for="cvv">CVV</label>
+		<input name="cvv" id="cvv" type="number" />
+		<br><br>
+
+		<input type="submit" value="Submit Order">
+	</form>
+
+	<p id="confirmationMessage"></p>
+
+	<script>
+
+		$("#paymentForm").submit(function (e) {
+
+			e.preventDefault();
+			var cardData = {
+				cardNumber: $("#cn").val(),
+				cardHolderName: $("#chn").val(),
+				expDate: $("#exp").val(),
+				cvv: $("#cvv").val()
+			};
+
+			//Validation
+			var ok = true;
+
+			if (cardData.cardNumber === "" || cardData.cardHolderName === ""
+				|| cardData.expDate === "" || cardData.cvv === "") {
+				ok = false;
+				$("#confirmationMessage").text("Fields cannot be empty");
+			}
+			else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16) {
+				ok = false
+				$("#confirmationMessage").text("Credit Card Number must have 16 digits");
+			}
+
+			// Post Card Data and redirect to Order Details page
+			if (ok) {
+				$.ajax({
+					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit",
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify(cardData),
+
+					success: function (result) {
+						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?cardNumber=" + cardData.cardNumber; // Redirect to the Order Details page
+						$("#confirmationMessage").text("Card added successfully!");
+					},
+					error: function (error) {
+						console.log(error);
+					}
+				});
+
+			} else {
+				// Stay in the page
+			}
+
+
+		});
+	</script>
+</body>
+
+</html>
