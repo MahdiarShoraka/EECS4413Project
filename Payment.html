@@ -15,18 +15,20 @@
 
 <body>
 
-	<div class="container">
-		<table id="DetailsTable" border="1">
-			<tr>
-				<th>Bidder's Name</th>
-				<th>Bidder's Address</th>
-				<th>Total Paid Amount</th>
-			</tr>
-			<!-- Rows will be dynamically added here -->
-		</table>
-	</div>
-	<br><br>
-
+	<!--	<div class="container">-->
+	<!--		<table id="DetailsTable" border="1">-->
+	<!--			<tr>-->
+	<!--				<th>Bidder's Name</th>-->
+	<!--				<th>Bidder's Address</th>-->
+	<!--				<th>Total Paid Amount</th>-->
+	<!--			</tr>-->
+	<!--			 Rows will be dynamically added here -->
+	<!--		</table>-->
+	<!--	</div>-->
+	<!--	<br><br>-->
+	<h1>Payment</h1>
+	<h3>Please add your payment information</h3>
+	<br>
 	<form id="paymentForm">
 		<label for="cn">Credit Card Number</label>
 		<input name="cardNumber" id="cn" type="number" />
@@ -42,7 +44,7 @@
 
 		<label for="cvv">CVV</label>
 		<input name="cvv" id="cvv" type="number" />
-		<br><br>
+		<br><br><br>
 
 		<input type="submit" value="Submit Order">
 	</form>
@@ -50,7 +52,6 @@
 	<p id="confirmationMessage"></p>
 
 	<script>
-
 		$("#paymentForm").submit(function (e) {
 
 			e.preventDefault();
@@ -73,6 +74,14 @@
 				ok = false
 				$("#confirmationMessage").text("Credit Card Number must have 16 digits");
 			}
+			else if (isNaN(cardData.cvv) || cardData.cvv.toString().length != 3) {
+				ok = false
+				$("#confirmationMessage").text("Security Code must be 3 digits");
+			}
+			else if (isNaN(cardData.expDate) || expirationDate.length != 4) {
+				ok = false
+				$("#confirmationMessage").text("Expriation Data is not valid. Expiration Date should be in the format of YYMM");
+			}
 
 			// Post Card Data and redirect to Order Details page
 			if (ok) {
@@ -94,10 +103,9 @@
 			} else {
 				// Stay in the page
 			}
-
-
 		});
 	</script>
+
 </body>
 
 </html>

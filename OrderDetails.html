@@ -4,32 +4,39 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>List Students</title>
+	<title>Order Details</title>
 	<link rel="stylesheet" href="styles.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
 	<header>
-		<h1>Student Information System</h1>
+		<h1>Order Details</h1>
 	</header>
 	<div class="container">
 		<table id="PaymentTable" border="1">
 			<tr>
 				<th>Payment Method ID</th>
 				<th>Buyer's Name</th>
-				<th>Shipping Address</th>
-				<th>Item ID</th>
-				<th>Total Paid Amount</th>
+<!--				<th>Shipping Address</th>-->
+<!--				<th>Item ID</th>-->
+<!--				<th>Total Paid Amount</th>-->
 			</tr>
 			<!-- Rows will be dynamically added here -->
 		</table>
 	</div>
-	
+	<button onclick="back()">Back to Main Page</button>
 	<footer>
 		<p></p>
 	</footer>
 	<script>
+		//Function for going back to the main page
+		function back()
+		{
+			window.location.href = "http://localhost:8080/StudentInformationSystem/search"
+		}
+		
+		
 		// Function for recieving card Data
 		function getCardData(cardId)
 		{
