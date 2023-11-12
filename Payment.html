@@ -15,20 +15,31 @@
 
 <body>
 
-	<!--	<div class="container">-->
-	<!--		<table id="DetailsTable" border="1">-->
-	<!--			<tr>-->
-	<!--				<th>Bidder's Name</th>-->
-	<!--				<th>Bidder's Address</th>-->
-	<!--				<th>Total Paid Amount</th>-->
-	<!--			</tr>-->
-	<!--			 Rows will be dynamically added here -->
-	<!--		</table>-->
-	<!--	</div>-->
-	<!--	<br><br>-->
-	<h1>Payment</h1>
-	<h3>Please add your payment information</h3>
-	<br>
+	<div class="details">
+
+		<h1>Winning Bidder</h1>
+
+		<p>First Name:</p>
+		<p id="firstName"></p>
+		<br>
+		<p>Last Name:</p>
+		<p id="lastName"></p>
+		<br>
+		<p>"Email:"</p>
+		<p id="email"></p>
+		<br>
+		<p>Shipping Address:</p>
+		<p id="address"></p>
+		<br>
+		<p>Item Name:</p>
+		<p id="item"></p>
+		<br>
+		<p>Total Cost:</p>
+		<p id="cost"></p>
+
+	</div>
+	<br><br>
+
 	<form id="paymentForm">
 		<label for="cn">Credit Card Number</label>
 		<input name="cardNumber" id="cn" type="number" />
@@ -44,7 +55,7 @@
 
 		<label for="cvv">CVV</label>
 		<input name="cvv" id="cvv" type="number" />
-		<br><br><br>
+		<br><br>
 
 		<input type="submit" value="Submit Order">
 	</form>
@@ -52,6 +63,79 @@
 	<p id="confirmationMessage"></p>
 
 	<script>
+
+
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const itemID = urlParams.get('itemID');
+		const userID = urlParams.get('userID');
+		const isExpe = urlParams.get('isExpe');
+
+
+
+		// Function for getting user data
+		function getUserData(userID) {
+
+			$.ajax({
+				url: "http://localhost:8080/StudentInformationSystem/api/users/" + userID,
+				type: 'GET',
+				success: function (result) {
+					if (result === null) {
+						console.log("There is no item to be shown.")
+					}
+					else {
+						document.getElementById("firstName").innerHTML += result.firstName;
+						document.getElementById("lastName").innerHTML += result.lastName;
+						document.getElementById("email").innerHTML += result.email;
+						document.getElementById("address").innerHTML += result.address;
+					}
+				},
+				error: function (error) {
+					console.log("Could not find any user with the provided UserID.");
+				}
+			});
+		}
+
+		// Function for getting item data
+		function getItemData(itemID, isExpe) {
+
+			$.ajax({
+				url: "http://localhost:8080/StudentInformationSystem/api/items/" + itemID,
+				type: 'GET',
+				success: function (result) {
+					if (result === null) {
+						console.log("There is no item to be shown.")
+					}
+					else {
+
+						var shippingPrice = result.shippingPrice;
+						var price = result.price;
+						if (isExpe == "true") {
+							var expeditedCost = result.expeditedCost;
+						}
+						else {
+							var expeditedCost = 0;
+						}
+						let totalCost = shippingPrice + price + expeditedCost;
+
+						document.getElementById("item").innerHTML += result.name;
+						document.getElementById("cost").innerHTML += totalCost;
+					}
+				},
+				error: function (error) {
+					console.log("Could not find the item that you are trying to purchase.");
+				}
+			});
+		}
+
+		// MAIN
+		$(document).ready(function () {
+
+			getItemData(itemID, isExpe);
+			getUserData(userID);
+
+		});
+
 		$("#paymentForm").submit(function (e) {
 
 			e.preventDefault();
@@ -59,7 +143,7 @@
 				cardNumber: $("#cn").val(),
 				cardHolderName: $("#chn").val(),
 				expDate: $("#exp").val(),
-				cvv: $("#cvv").val()
+				cvv: $("#cvv").val(),
 			};
 
 			//Validation
@@ -70,29 +154,21 @@
 				ok = false;
 				$("#confirmationMessage").text("Fields cannot be empty");
 			}
-			else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16) {
-				ok = false
-				$("#confirmationMessage").text("Credit Card Number must have 16 digits");
-			}
-			else if (isNaN(cardData.cvv) || cardData.cvv.toString().length != 3) {
-				ok = false
-				$("#confirmationMessage").text("Security Code must be 3 digits");
-			}
-			else if (isNaN(cardData.expDate) || expirationDate.length != 4) {
-				ok = false
-				$("#confirmationMessage").text("Expriation Data is not valid. Expiration Date should be in the format of YYMM");
-			}
+			//else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16) {
+			//	ok = false
+			//	$("#confirmationMessage").text("Credit Card Number must have 16 digits");
+			//}
 
-			// Post Card Data and redirect to Order Details page
+			// 
 			if (ok) {
 				$.ajax({
-					url: "http://localhost:8080/proj/api/payment/submit",
+					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
 					type: 'POST',
 					contentType: 'application/json',
 					data: JSON.stringify(cardData),
 
 					success: function (result) {
-						window.location.href = "http://localhost:8080/proj/payment/order?cardNumber=" + cardData.cardNumber; // Redirect to the Order Details page
+						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?" // Redirect to the Order Details page
 						$("#confirmationMessage").text("Card added successfully!");
 					},
 					error: function (error) {
@@ -100,12 +176,14 @@
 					}
 				});
 
+
 			} else {
 				// Stay in the page
 			}
+
+
 		});
 	</script>
-
 </body>
 
 </html>
