@@ -4,44 +4,61 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Order Details</title>
+	<title>List Students</title>
 	<link rel="stylesheet" href="styles.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
 	<header>
-		<h1>Order Details</h1>
+		<h1>Order Summary</h1>
 	</header>
 	<div class="container">
-		<table id="PaymentTable" border="1">
-			<tr>
-				<th>Payment Method ID</th>
-				<th>Buyer's Name</th>
-<!--				<th>Shipping Address</th>-->
-<!--				<th>Item ID</th>-->
-<!--				<th>Total Paid Amount</th>-->
-			</tr>
-			<!-- Rows will be dynamically added here -->
-		</table>
+
+		<p id="pDesc">Payment Method ID:</p>
+		<p id="payment"></p>
+
+		<p id="fnDesc">First Name: </p>
+		<p id="firstName"></p>
+
+		<p id="lnDesc">Last Name: </p>
+		<p id="lastName"></p>
+
+		<p id="emDesc">Email: </p>
+		<p id="email"></p>
+
+		<p id="adDesc">Address: </p>
+		<p id="address"></p>
+
+		<p id="iDesc">Item ID: </p>
+		<p id="item"></p>
+
+		<p id="coDesc">Total: </p>
+		<p id="cost"></p>
+
+		<p id="shDesc">Delivery Time (in days): </p>
+		<p id="shippingTime"></p>
+
 	</div>
-	<button onclick="back()">Back to Main Page</button>
+
 	<footer>
 		<p></p>
 	</footer>
+
 	<script>
-		//Function for going back to the main page
-		function back()
-		{
-			window.location.href = "http://localhost:8080/proj/search"
-		}
-		
-		
-		// Function for recieving card Data
-		function getCardData(cardId)
-		{
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const trId = urlParams.get('id');
+		const itemID = urlParams.get('item');
+		const userID = urlParams.get('user');
+
+
+		// Function for getting card Data
+		function getCardData(trId, userID, itemID) {
+
 			$.ajax({
-				url: "http://localhost:8080/proj/api/payment/order?cardNumber=" + cardId,
+				url: "http://localhost:8080/StudentInformationSystem/api/payment/order?id=" + trId
+					+ "&user=" + userID + "&item=" + itemID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {
@@ -50,15 +67,13 @@
 					else {
 						card = result.cardNumber.toString();
 						privateCardNumber = card.substring(12);
-						
-						var table = $("#PaymentTable");
-						var row = $("<tr></tr>");
-						row.append($("<td></td>").text("****" + privateCardNumber));
-						row.append($("<td></td>").text(result.cardHolderName));
-						row.append($("<td></td>").text());
-						row.append($("<td></td>").text());
-						row.append($("<td></td>").text());
-						table.append(row);
+
+						itemid = result.itemID;
+						total = result.totalCost;
+
+						document.getElementById("payment").innerHTML += privateCardNumber;
+						document.getElementById("item").innerHTML += itemid;
+						document.getElementById("cost").innerHTML += total;
 					}
 				},
 				error: function (error) {
@@ -66,12 +81,57 @@
 				}
 			});
 		}
-		
+
+
+		// Function for getting user data
+		function getUserData(userID) {
+
+			$.ajax({
+				url: "http://localhost:8080/StudentInformationSystem/api/users/" + userID,
+				type: 'GET',
+				success: function (result) {
+					if (result === null) {
+						console.log("There is no item to be shown.")
+					}
+					else {
+						document.getElementById("firstName").innerHTML += result.firstName;
+						document.getElementById("lastName").innerHTML += result.lastName;
+						document.getElementById("email").innerHTML += result.email;
+						document.getElementById("address").innerHTML += result.address;
+					}
+				},
+				error: function (error) {
+					console.log("Could not find any user with the provided UserID.");
+				}
+			});
+		}
+
+		// Function for getting item data
+		function getItemData(itemID) {
+
+			$.ajax({
+				url: "http://localhost:8080/StudentInformationSystem/api/items/" + itemID,
+				type: 'GET',
+				success: function (result) {
+					if (result === null) {
+						console.log("There is no item to be shown.")
+					}
+					else {
+						time = result.shippingTime;
+						document.getElementById("shippingTime").innerHTML += time;
+					}
+				},
+				error: function (error) {
+					console.log("Could not find the item that you are trying to purchase.");
+				}
+			});
+		}
+
 		// MAIN
 		$(document).ready(function () {
-			const urlParams = new URLSearchParams(window.location.search);
-			const cardId = urlParams.get('cardNumber');
-			getCardData(cardId);
+			getCardData(trId, userID, itemID);
+			getItemData(itemID);
+			getUserData(userID);
 		});
 	</script>
 </body>

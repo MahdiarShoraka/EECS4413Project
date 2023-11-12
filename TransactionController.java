@@ -38,9 +38,9 @@ public class TransactionController {
 
 		info.setTotalCost(total);
 
-		int trId = info.getTransactionID();
-		trId = +2;
-		info.setTransactionID(trId);
+//		double rn = Math.random();
+//		int trId = (int) Math.round(rn);
+//		info.setTransactionID(trId);
 
 		info.setItemID(itemId);
 		info.setUserID(userId);
@@ -51,7 +51,8 @@ public class TransactionController {
 	@GET
 	@Path("/order")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Transaction getCard(@QueryParam("id") int id) {
+	public Transaction getCard(@QueryParam("id") int id, @QueryParam("item") int itemId,
+			@QueryParam("user") int userId) {
 		return tranDAO.read(id);
 	}
 

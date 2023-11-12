@@ -33,18 +33,18 @@ public class TransactionDAO {
 	}
 
 	public Transaction create(Transaction tr) {
-		String sql = "INSERT INTO Transactions(TransactionID, CreditCardNumber, CardHolderName, ExpirationDate, SecurityCode, "
-				+ "ItemID, UserID, TotalCost, Seller) VALUES(?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO Transactions(CreditCardNumber, CardHolderName, ExpirationDate, SecurityCode, "
+				+ "ItemID, UserID, TotalCost, Seller) VALUES(?,?,?,?,?,?,?,?)";
 		try (Connection conn = DatabaseConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setInt(1, tr.getTransactionID());
-			pstmt.setLong(2, tr.getCardNumber());
-			pstmt.setString(3, tr.getCardHolderName());
-			pstmt.setString(4, tr.getExpDate());
-			pstmt.setInt(5, tr.getCvv());
-			pstmt.setInt(6, tr.getItemID());
-			pstmt.setInt(7, tr.getUserID());
-			pstmt.setDouble(8, tr.getTotalCost());
-			pstmt.setString(9, tr.getSeller());
+			
+			pstmt.setLong(1, tr.getCardNumber());
+			pstmt.setString(2, tr.getCardHolderName());
+			pstmt.setString(3, tr.getExpDate());
+			pstmt.setInt(4, tr.getCvv());
+			pstmt.setInt(5, tr.getItemID());
+			pstmt.setInt(6, tr.getUserID());
+			pstmt.setDouble(7, tr.getTotalCost());
+			pstmt.setString(8, tr.getSeller());
 
 			pstmt.executeUpdate();
 

@@ -159,7 +159,6 @@
 			//	$("#confirmationMessage").text("Credit Card Number must have 16 digits");
 			//}
 
-			// 
 			if (ok) {
 				$.ajax({
 					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
@@ -168,7 +167,9 @@
 					data: JSON.stringify(cardData),
 
 					success: function (result) {
-						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?" // Redirect to the Order Details page
+						// Redirect to the Order Details page
+						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?id=" + cardData.transactionID
+					+ "&user=" + userID + "&item=" + itemID
 						$("#confirmationMessage").text("Card added successfully!");
 					},
 					error: function (error) {
