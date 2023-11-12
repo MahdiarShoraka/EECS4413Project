@@ -33,7 +33,7 @@
 		//Function for going back to the main page
 		function back()
 		{
-			window.location.href = "http://localhost:8080/StudentInformationSystem/search"
+			window.location.href = "http://localhost:8080/proj/search"
 		}
 		
 		
@@ -41,7 +41,7 @@
 		function getCardData(cardId)
 		{
 			$.ajax({
-				url: "http://localhost:8080/StudentInformationSystem/api/payment/order?cardNumber=" + cardId,
+				url: "http://localhost:8080/proj/api/payment/order?cardNumber=" + cardId,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {

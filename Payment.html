@@ -86,13 +86,13 @@
 			// Post Card Data and redirect to Order Details page
 			if (ok) {
 				$.ajax({
-					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit",
+					url: "http://localhost:8080/proj/api/payment/submit",
 					type: 'POST',
 					contentType: 'application/json',
 					data: JSON.stringify(cardData),
 
 					success: function (result) {
-						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?cardNumber=" + cardData.cardNumber; // Redirect to the Order Details page
+						window.location.href = "http://localhost:8080/proj/payment/order?cardNumber=" + cardData.cardNumber; // Redirect to the Order Details page
 						$("#confirmationMessage").text("Card added successfully!");
 					},
 					error: function (error) {
