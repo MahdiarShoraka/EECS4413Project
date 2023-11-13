@@ -52,7 +52,7 @@ public class TransactionDAO {
 			int id = ran.nextInt(100000);
 			tr.setTransactionID(id);
 			pstmt.setInt(9, tr.getTransactionID());
-			System.out.println(id);
+			System.out.println("New Transaction created with ID:" + id);
 
 			pstmt.executeUpdate();
 
