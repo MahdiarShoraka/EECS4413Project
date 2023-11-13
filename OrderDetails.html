@@ -44,7 +44,7 @@
 
 	</div>
 	<br>
-	
+
 	<button onclick="back()">Back to Main Page</button>
 
 	<footer>
@@ -52,7 +52,7 @@
 	</footer>
 
 	<script>
-		
+
 		//Global Params
 		const urlParams = new URLSearchParams(window.location.search);
 		const trId = urlParams.get('id');
@@ -60,16 +60,15 @@
 		const userID = urlParams.get('user');
 
 		//Function for going back to the main page
-		function back()
-		{
-			window.location.href = "http://localhost:8080/StudentInformationSystem/search"
+		function back() {
+			window.location.href = "http://localhost:8080/proj/search"
 		}
-		
+
 		// Function for getting card Data
 		function getCardData(trId, userID, itemID) {
 
 			$.ajax({
-				url: "http://localhost:8080/StudentInformationSystem/api/payment/order?id=" + trId
+				url: "http://localhost:8080/proj/api/payment/order?id=" + trId
 					+ "&user=" + userID + "&item=" + itemID,
 				type: 'GET',
 				success: function (result) {
@@ -99,7 +98,7 @@
 		function getUserData(userID) {
 
 			$.ajax({
-				url: "http://localhost:8080/StudentInformationSystem/api/users/" + userID,
+				url: "http://localhost:8080/proj/api/users/" + userID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {
@@ -122,7 +121,7 @@
 		function getItemData(itemID) {
 
 			$.ajax({
-				url: "http://localhost:8080/StudentInformationSystem/api/items/" + itemID,
+				url: "http://localhost:8080/proj/api/items/" + itemID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {

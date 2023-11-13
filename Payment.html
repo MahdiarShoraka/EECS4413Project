@@ -69,7 +69,7 @@
 		function getUserData(userID) {
 
 			$.ajax({
-				url: "http://localhost:8080/StudentInformationSystem/api/users/" + userID,
+				url: "http://localhost:8080/proj/api/users/" + userID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {
@@ -92,7 +92,7 @@
 		function getItemData(itemID, isExpe) {
 
 			$.ajax({
-				url: "http://localhost:8080/StudentInformationSystem/api/items/" + itemID,
+				url: "http://localhost:8080/proj/api/items/" + itemID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {
@@ -168,14 +168,14 @@
 			// If Card is Valid
 			if (ok) {
 				$.ajax({
-					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
+					url: "http://localhost:8080/proj/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
 					type: 'POST',
 					contentType: 'application/json',
 					data: JSON.stringify(cardData),
 
 					success: function (result) {
 						// Redirect to the Order Details page
-						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?id=" + result.transactionID
+						window.location.href = "http://localhost:8080/proj/payment/order?id=" + result.transactionID
 							+ "&user=" + userID + "&item=" + itemID
 						$("#confirmationMessage").text("Card added successfully!");
 					},
