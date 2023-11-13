@@ -24,7 +24,7 @@ public class TransactionController {
 	@Path("/submit")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Transaction createCard(Transaction info, @QueryParam("itemID") int itemId, @QueryParam("userID") int userId,
+	public Transaction createTransaction(Transaction info, @QueryParam("itemID") int itemId, @QueryParam("userID") int userId,
 			@QueryParam("isExpe") boolean isExpe) throws SQLException {
 
 		Item item = itemDAO.read(itemId);
@@ -47,7 +47,7 @@ public class TransactionController {
 	@GET
 	@Path("/order")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Transaction getCard(@QueryParam("id") int id, @QueryParam("item") int itemId,
+	public Transaction getTransaction(@QueryParam("id") int id, @QueryParam("item") int itemId,
 			@QueryParam("user") int userId) {
 		return tranDAO.read(id);
 	}
@@ -56,15 +56,15 @@ public class TransactionController {
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Transaction updateCard(@PathParam("id") int id, Transaction card) {
+	public Transaction updateTransaction(@PathParam("id") int id, Transaction card) {
 		return tranDAO.update(id, card);
 	}
 
-//	@DELETE
-//	@Path("/{id}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public void deleteCard(@PathParam("id") int id) {
-//		tranDAO.delete(id);
-//	}
+	@DELETE
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public void deleteTransaction(@PathParam("id") int id) {
+		tranDAO.delete(id);
+	}
 
 }

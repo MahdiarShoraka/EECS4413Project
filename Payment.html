@@ -141,6 +141,10 @@
 			//Input Validations
 			var ok = true;
 
+			expDateStr = cardData.expDate.toString();
+			expMonth = expDateStr.substring(2);
+			expYear = expDateStr.substring(0, 2);
+
 			if (cardData.cardNumber === "" || cardData.cardHolderName === ""
 				|| cardData.expDate === "" || cardData.cvv === "") {
 				ok = false;
@@ -148,15 +152,16 @@
 			}
 			else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16 || cardData.cardNumber < 0) {
 				ok = false
-				$("#confirmationMessage").text("Entered invalid Card Number. Please make sure you have entered all 16 digits of your card number");
+				$("#confirmationMessage").text("Invalid Card Number. Please make sure you have entered all 16 digits of your card number");
 			}
 			else if (isNaN(cardData.cvv) || cardData.cvv.toString().length != 3) {
 				ok = false;
-				$("#confirmationMessage").text("Entered cvv is not valid");
+				$("#confirmationMessage").text("Invalid cvv format");
 			}
-			else if (cardData.expDate.toString().length != 4 || isNaN(cardData.expDate)) {
+			else if (expDateStr.length != 4 || isNaN(cardData.expDate)
+				|| parseInt(expMonth) > 12 || parseInt(expYear) < 23) {
 				ok = false;
-				$("#confirmationMessage").text("Entered expiration date is not valid");
+				$("#confirmationMessage").text("Invalid expiration date. (YYMM)");
 			}
 
 

@@ -43,19 +43,28 @@
 		<p id="shippingTime"></p>
 
 	</div>
+	<br>
+	
+	<button onclick="back()">Back to Main Page</button>
 
 	<footer>
 		<p></p>
 	</footer>
 
 	<script>
-
+		
+		//Global Params
 		const urlParams = new URLSearchParams(window.location.search);
 		const trId = urlParams.get('id');
 		const itemID = urlParams.get('item');
 		const userID = urlParams.get('user');
 
-
+		//Function for going back to the main page
+		function back()
+		{
+			window.location.href = "http://localhost:8080/StudentInformationSystem/search"
+		}
+		
 		// Function for getting card Data
 		function getCardData(trId, userID, itemID) {
 
