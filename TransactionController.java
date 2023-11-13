@@ -7,6 +7,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -37,11 +38,6 @@ public class TransactionController {
 		double total = shippingPrice + itemPrice + expePrice;
 
 		info.setTotalCost(total);
-
-//		double rn = Math.random();
-//		int trId = (int) Math.round(rn);
-//		info.setTransactionID(trId);
-
 		info.setItemID(itemId);
 		info.setUserID(userId);
 
@@ -56,19 +52,19 @@ public class TransactionController {
 		return tranDAO.read(id);
 	}
 
-	@DELETE
+	@PUT
 	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void deleteCard(@PathParam("id") int id) {
-		tranDAO.delete(id);
+	public Transaction updateCard(@PathParam("id") int id, Transaction card) {
+		return tranDAO.update(id, card);
 	}
 
-//	@PUT
+//	@DELETE
 //	@Path("/{id}")
-//	@Consumes(MediaType.APPLICATION_JSON)
 //	@Produces(MediaType.APPLICATION_JSON)
-//	public Transaction updateCard(@PathParam("id") long id, Transaction card) {
-//		return cardDAO.update(id, card);
+//	public void deleteCard(@PathParam("id") int id) {
+//		tranDAO.delete(id);
 //	}
 
 }

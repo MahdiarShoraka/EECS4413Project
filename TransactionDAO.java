@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 public class TransactionDAO {
 
 	public Transaction read(int tranID) {
-		String sql = "SELECT CardHolderName, ExpirationDate, SecurityCode, "
+		String sql = "SELECT CreditCardNumber, CardHolderName, ExpirationDate, SecurityCode, "
 				+ "ItemID, UserID, TotalCost, Seller FROM Transactions WHERE TransactionID = ?";
 		Transaction tr = null;
 		try (Connection conn = DatabaseConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -17,8 +18,9 @@ public class TransactionDAO {
 				if (rs.next()) {
 					tr = new Transaction();
 					tr.setTransactionID(tranID);
+					tr.setCardNumber(rs.getLong("CreditCardNumber"));
 					tr.setCardHolderName(rs.getString("CardHolderName"));
-					tr.setExpDate(rs.getString("ExpirationDate"));
+					tr.setExpDate(rs.getInt("ExpirationDate"));
 					tr.setCvv(rs.getInt("SecurityCode"));
 					tr.setItemID(rs.getInt("ItemID"));
 					tr.setUserID(rs.getInt("UserID"));
@@ -34,17 +36,23 @@ public class TransactionDAO {
 
 	public Transaction create(Transaction tr) {
 		String sql = "INSERT INTO Transactions(CreditCardNumber, CardHolderName, ExpirationDate, SecurityCode, "
-				+ "ItemID, UserID, TotalCost, Seller) VALUES(?,?,?,?,?,?,?,?)";
+				+ "ItemID, UserID, TotalCost, Seller, TransactionID) VALUES(?,?,?,?,?,?,?,?,?)";
 		try (Connection conn = DatabaseConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			
+
 			pstmt.setLong(1, tr.getCardNumber());
 			pstmt.setString(2, tr.getCardHolderName());
-			pstmt.setString(3, tr.getExpDate());
+			pstmt.setInt(3, tr.getExpDate());
 			pstmt.setInt(4, tr.getCvv());
 			pstmt.setInt(5, tr.getItemID());
 			pstmt.setInt(6, tr.getUserID());
 			pstmt.setDouble(7, tr.getTotalCost());
 			pstmt.setString(8, tr.getSeller());
+
+			Random ran = new Random();
+			int id = ran.nextInt(100000);
+			tr.setTransactionID(id);
+			pstmt.setInt(9, tr.getTransactionID());
+			System.out.println(id);
 
 			pstmt.executeUpdate();
 
@@ -54,21 +62,26 @@ public class TransactionDAO {
 		return tr;
 	}
 
-//	public Transaction update(long number, Transaction card) {
-//		String sql = "UPDATE Transation SET CreditCardNumber = ?, CardHolderName = ?, ExpirationDate = ?, SecurityCode = ? WHERE TransactionID =?";
-//		try (Connection conn = DatabaseConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//			pstmt.setString(1, card.getCardHolderName());
-//			pstmt.setString(2, card.getExpDate());
-//			pstmt.setInt(3, card.getCvv());
-//			pstmt.setLong(4, number);
-//			pstmt.executeUpdate();
-//
-//		} catch (SQLException e) {
-//			System.out.println(e.getMessage());
-//		}
-//		return card;
-//	}
+	public Transaction update(int id, Transaction card) {
+		String sql = "UPDATE Transactions SET CreditCardNumber = ?, CardHolderName = ?, ExpirationDate = ?, SecurityCode = ?, ItemID = ?, UserID = ?, TotalCost = ?, Seller = ? WHERE TransactionID =?";
+		try (Connection conn = DatabaseConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+			pstmt.setLong(1, card.getCardNumber());
+			pstmt.setString(2, card.getCardHolderName());
+			pstmt.setInt(3, card.getExpDate());
+			pstmt.setInt(4, card.getCvv());
+			pstmt.setInt(5, card.getItemID());
+			pstmt.setInt(6, card.getUserID());
+			pstmt.setDouble(7, card.getTotalCost());
+			pstmt.setString(8, card.getSeller());
+			pstmt.setInt(9, id);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return card;
+	}
 
 	public void delete(int number) {
 		String sql = "DELETE FROM Transactions WHERE TransactionID = ?";

@@ -33,10 +33,13 @@
 		<p id="iDesc">Item ID: </p>
 		<p id="item"></p>
 
+		<p id="iName">Item Name: </p>
+		<p id="itemName"></p>
+
 		<p id="coDesc">Total: </p>
 		<p id="cost"></p>
 
-		<p id="shDesc">Delivery Time (in days): </p>
+		<p id="shDesc"><b>Delivery Time (in days):<b> </p>
 		<p id="shippingTime"></p>
 
 	</div>
@@ -67,10 +70,10 @@
 					else {
 						card = result.cardNumber.toString();
 						privateCardNumber = card.substring(12);
-
 						itemid = result.itemID;
 						total = result.totalCost;
 
+						document.getElementById("payment").innerHTML += "***";
 						document.getElementById("payment").innerHTML += privateCardNumber;
 						document.getElementById("item").innerHTML += itemid;
 						document.getElementById("cost").innerHTML += total;
@@ -118,7 +121,10 @@
 					}
 					else {
 						time = result.shippingTime;
+						itemName = result.name;
+
 						document.getElementById("shippingTime").innerHTML += time;
+						document.getElementById("itemName").innerHTML += time;
 					}
 				},
 				error: function (error) {

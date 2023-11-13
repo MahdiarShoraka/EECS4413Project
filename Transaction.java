@@ -4,7 +4,7 @@ public class Transaction {
 
 	private String cardHolderName;
 	private long cardNumber;
-	private String expDate;
+	private int expDate;
 	private int cvv;
 	private double totalCost;
 	private int transactionID;
@@ -28,11 +28,11 @@ public class Transaction {
 		this.cardNumber = cardNumber;
 	}
 
-	public String getExpDate() {
+	public int getExpDate() {
 		return expDate;
 	}
 
-	public void setExpDate(String expDate) {
+	public void setExpDate(int expDate) {
 		this.expDate = expDate;
 	}
 

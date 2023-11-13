@@ -21,19 +21,15 @@
 
 		<p>First Name:</p>
 		<p id="firstName"></p>
-		<br>
 		<p>Last Name:</p>
 		<p id="lastName"></p>
-		<br>
 		<p>"Email:"</p>
 		<p id="email"></p>
-		<br>
 		<p>Shipping Address:</p>
 		<p id="address"></p>
 		<br>
 		<p>Item Name:</p>
 		<p id="item"></p>
-		<br>
 		<p>Total Cost:</p>
 		<p id="cost"></p>
 
@@ -50,7 +46,7 @@
 		<br><br>
 
 		<label for="exp">Expiration Date</label>
-		<input name="expDate" id="exp" type="text" />
+		<input name="expDate" id="exp" type="number" />
 		<br><br>
 
 		<label for="cvv">CVV</label>
@@ -64,14 +60,10 @@
 
 	<script>
 
-
-
 		const urlParams = new URLSearchParams(window.location.search);
 		const itemID = urlParams.get('itemID');
 		const userID = urlParams.get('userID');
 		const isExpe = urlParams.get('isExpe');
-
-
 
 		// Function for getting user data
 		function getUserData(userID) {
@@ -146,7 +138,7 @@
 				cvv: $("#cvv").val(),
 			};
 
-			//Validation
+			//Input Validations
 			var ok = true;
 
 			if (cardData.cardNumber === "" || cardData.cardHolderName === ""
@@ -154,11 +146,21 @@
 				ok = false;
 				$("#confirmationMessage").text("Fields cannot be empty");
 			}
-			//else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16) {
-			//	ok = false
-			//	$("#confirmationMessage").text("Credit Card Number must have 16 digits");
-			//}
+			else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16 || cardData.cardNumber < 0) {
+				ok = false
+				$("#confirmationMessage").text("Entered invalid Card Number. Please make sure you have entered all 16 digits of your card number");
+			}
+			else if (isNaN(cardData.cvv) || cardData.cvv.toString().length != 3) {
+				ok = false;
+				$("#confirmationMessage").text("Entered cvv is not valid");
+			}
+			else if (cardData.expDate.toString().length != 4 || isNaN(cardData.expDate)) {
+				ok = false;
+				$("#confirmationMessage").text("Entered expiration date is not valid");
+			}
 
+
+			// If Card is Valid
 			if (ok) {
 				$.ajax({
 					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
@@ -168,8 +170,8 @@
 
 					success: function (result) {
 						// Redirect to the Order Details page
-						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?id=" + cardData.transactionID
-					+ "&user=" + userID + "&item=" + itemID
+						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?id=" + result.transactionID
+							+ "&user=" + userID + "&item=" + itemID
 						$("#confirmationMessage").text("Card added successfully!");
 					},
 					error: function (error) {
@@ -181,7 +183,6 @@
 			} else {
 				// Stay in the page
 			}
-
 
 		});
 	</script>
