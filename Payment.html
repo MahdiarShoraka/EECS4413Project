@@ -37,20 +37,20 @@
 	<br><br>
 
 	<form id="paymentForm">
-		<label for="cn">Credit Card Number</label>
-		<input name="cardNumber" id="cn" type="number" />
+		<label for="cn">Credit Card Number:</label>
+		<input name="cardNumber" id="cn" type="number" required/>
 		<br><br>
 
-		<label for="chn">Card Holder Name</label>
-		<input name="cardHolderName" id="chn" type="text" />
+		<label for="chn">Card Holder Name:</label>
+		<input name="cardHolderName" id="chn" type="text" required/>
 		<br><br>
 
-		<label for="exp">Expiration Date</label>
-		<input name="expDate" id="exp" type="number" />
+		<label for="exp">Expiration Date:</label>
+		<input name="expDate" id="exp" type="number" required/>
 		<br><br>
 
-		<label for="cvv">CVV</label>
-		<input name="cvv" id="cvv" type="number" />
+		<label for="cvv">CVV:</label>
+		<input name="cvv" id="cvv" type="number" required/>
 		<br><br>
 
 		<input type="submit" value="Submit Order">
@@ -64,12 +64,70 @@
 		const itemID = urlParams.get('itemID');
 		const userID = urlParams.get('userID');
 		const isExpe = urlParams.get('isExpe');
+		
+		$("#paymentForm").submit(function (e) {
+
+			e.preventDefault();
+			var cardData = {
+				cardNumber: $("#cn").val(),
+				cardHolderName: $("#chn").val(),
+				expDate: $("#exp").val(),
+				cvv: $("#cvv").val(),
+			};
+
+			//Input Validations
+			var ok = true;
+
+			expDateStr = cardData.expDate.toString();
+			expMonth = expDateStr.substring(2);
+			expYear = expDateStr.substring(0, 2);
+			
+			if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16 || cardData.cardNumber < 0) {
+				ok = false
+				$("#confirmationMessage").text("Invalid Card Number. Please make sure you have entered all 16 digits of your card number");
+			}
+			else if (isNaN(cardData.cvv) || cardData.cvv.toString().length != 3) {
+				ok = false;
+				$("#confirmationMessage").text("Invalid cvv format");
+			}
+			else if (expDateStr.length != 4 || isNaN(cardData.expDate)
+				|| parseInt(expMonth) > 12 || parseInt(expYear) < 23) {
+				ok = false;
+				$("#confirmationMessage").text("Invalid expiration date. (YYMM)");
+			}
+
+
+			// If Card is Valid
+			if (ok) {
+				$.ajax({
+					url: "http://localhost:8080/StudentInformationSystem/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify(cardData),
+
+					success: function (result) {
+						// Redirect to the Order Details page
+						window.location.href = "http://localhost:8080/StudentInformationSystem/payment/order?id=" + result.transactionID
+							+ "&user=" + userID + "&item=" + itemID
+						$("#confirmationMessage").text("Card added successfully!");
+					},
+					error: function (error) {
+						console.log(error);
+					}
+				});
+
+
+			} else {
+				// Stay in the page
+			}
+
+		});
 
 		// Function for getting user data
 		function getUserData(userID) {
 
 			$.ajax({
-				url: "http://localhost:8080/proj/api/users/" + userID,
+				url: "http://localhost:8080/StudentInformationSystem/api/users/" + userID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {
@@ -92,7 +150,7 @@
 		function getItemData(itemID, isExpe) {
 
 			$.ajax({
-				url: "http://localhost:8080/proj/api/items/" + itemID,
+				url: "http://localhost:8080/StudentInformationSystem/api/items/" + itemID,
 				type: 'GET',
 				success: function (result) {
 					if (result === null) {
@@ -128,68 +186,7 @@
 
 		});
 
-		$("#paymentForm").submit(function (e) {
-
-			e.preventDefault();
-			var cardData = {
-				cardNumber: $("#cn").val(),
-				cardHolderName: $("#chn").val(),
-				expDate: $("#exp").val(),
-				cvv: $("#cvv").val(),
-			};
-
-			//Input Validations
-			var ok = true;
-
-			expDateStr = cardData.expDate.toString();
-			expMonth = expDateStr.substring(2);
-			expYear = expDateStr.substring(0, 2);
-
-			if (cardData.cardNumber === "" || cardData.cardHolderName === ""
-				|| cardData.expDate === "" || cardData.cvv === "") {
-				ok = false;
-				$("#confirmationMessage").text("Fields cannot be empty");
-			}
-			else if (isNaN(cardData.cardNumber) || cardData.cardNumber.toString().length != 16 || cardData.cardNumber < 0) {
-				ok = false
-				$("#confirmationMessage").text("Invalid Card Number. Please make sure you have entered all 16 digits of your card number");
-			}
-			else if (isNaN(cardData.cvv) || cardData.cvv.toString().length != 3) {
-				ok = false;
-				$("#confirmationMessage").text("Invalid cvv format");
-			}
-			else if (expDateStr.length != 4 || isNaN(cardData.expDate)
-				|| parseInt(expMonth) > 12 || parseInt(expYear) < 23) {
-				ok = false;
-				$("#confirmationMessage").text("Invalid expiration date. (YYMM)");
-			}
-
-
-			// If Card is Valid
-			if (ok) {
-				$.ajax({
-					url: "http://localhost:8080/proj/api/payment/submit?itemID=" + itemID + "&userID=" + userID + "&isExpe=" + isExpe,
-					type: 'POST',
-					contentType: 'application/json',
-					data: JSON.stringify(cardData),
-
-					success: function (result) {
-						// Redirect to the Order Details page
-						window.location.href = "http://localhost:8080/proj/payment/order?id=" + result.transactionID
-							+ "&user=" + userID + "&item=" + itemID
-						$("#confirmationMessage").text("Card added successfully!");
-					},
-					error: function (error) {
-						console.log(error);
-					}
-				});
-
-
-			} else {
-				// Stay in the page
-			}
-
-		});
+		
 	</script>
 </body>
 
